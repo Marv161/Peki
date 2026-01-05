@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peki</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-purple: rgb(30, 10, 54);
+            --glow-purple: #7c3aed;
+            --luxury-gold: #d4af37;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background-color: #000000;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Firmamento Estrellado */
+        .stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .stars, .stars2 {
+            position: absolute;
+            background: transparent;
+        }
+
+        .stars {
+            width: 1px;
+            height: 1px;
+            box-shadow: 1744px 122px #FFF, 134px 1321px #FFF, 122px 542px #FFF, 100px 200px #FFF, 500px 300px #FFF, 800px 100px #FFF, 1200px 800px #FFF, 1500px 400px #FFF, 300px 900px #FFF, 700px 1200px #FFF, 1000px 500px #FFF, 1800px 200px #FFF, 450px 150px #FFF, 850px 750px #FFF, 1300px 100px #FFF;
+            animation: twinkle 5s infinite ease-in-out;
+        }
+
+        .stars2 {
+            width: 2px;
+            height: 2px;
+            box-shadow: 200px 400px #FFF, 600px 800px #FFF, 1000px 1200px #FFF, 1400px 1600px #FFF, 1800px 200px #FFF, 300px 700px #FFF, 700px 1100px #FFF;
+            animation: twinkle 7s infinite ease-in-out;
+            opacity: 0.6;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+
+        /* --- PANTALLA DE INTRO --- */
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+
+        /* Efecto Glow Grad Wave con Movimiento (Namewave) */
+        .grad-wave-text {
+            display: inline-block;
+            background-image: linear-gradient(-90deg, rgb(43, 244, 247) 0%, rgb(58, 21, 239) 33.3333%, rgb(73, 208, 185) 66.6667%, rgb(28, 87, 89) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: waveGradient 4s linear infinite, nameWavePhysical 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 12px rgba(124, 58, 237, 0.6));
+        }
+
+        @keyframes waveGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        @keyframes nameWavePhysical {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-1deg); }
+            75% { transform: translateY(8px) rotate(1deg); }
+        }
+
+        .intro-name {
+            font-family: 'Cinzel', serif;
+            font-size: 5.5rem;
+            font-weight: 700;
+            letter-spacing: 15px;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+        }
+
+        .enter-btn {
+            background: transparent;
+            border: 1px solid rgba(124, 58, 237, 0.4);
+            padding: 1rem 3rem;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            border-radius: 3rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
+        }
+
+        .enter-btn:hover {
+            border-color: #a78bfa;
+            box-shadow: 0 0 40px rgba(124, 58, 237, 0.4), 0 0 20px rgba(124, 58, 237, 0.6);
+            transform: translateY(-3px);
+            letter-spacing: 6px;
+        }
+
+        .enter-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: luxuryShine 3s infinite;
+        }
+
+        @keyframes luxuryShine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        #main-content {
+            opacity: 0;
+            transform: scale(1.1);
+            transition: all 1.5s ease;
+            z-index: 10;
+        }
+
+        .content-visible {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+
+        .card-wrapper {
+            position: relative;
+            padding: 3px;
+            border-radius: 2.2rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-wrapper::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent 20%, #000 40%, var(--glow-purple) 50%, #000 60%, transparent 80%);
+            animation: rotateWave 4s linear infinite;
+        }
+
+        @keyframes rotateWave {
+            to { transform: rotate(360deg); }
+        }
+
+        .glass-card {
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            width: 420px;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 11;
+            border: 1px solid rgba(124, 58, 237, 0.1);
+        }
+
+        .name-3d {
+            font-family: 'Cinzel', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 2rem;
+        }
+
+        .profile-img-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(124, 58, 237, 0.2);
+            box-shadow: 0 0 40px rgba(124, 58, 237, 0.3);
+        }
+
+        .info-card-mini {
+            position: relative;
+            margin: 0 auto;
+            max-width: 320px;
+            padding: 2px;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .info-card-mini::before {
+            content: '';
+            position: absolute;
+            width: 250%;
+            height: 250%;
+            background: conic-gradient(from 0deg, transparent 20%, #000 40%, var(--glow-purple) 50%, #000 60%, transparent 80%);
+            animation: rotateWave 6s linear infinite;
+        }
+
+        .info-content {
+            background: rgba(0, 0, 0, 0.95);
+            width: 100%;
+            border-radius: 1.4rem;
+            padding: 1.2rem;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .data-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .asset-icon {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.2));
+        }
+
+        /* --- MINI REPRODUCTOR --- */
+        #mini-player {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 50;
+            background: rgba(46, 16, 101, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 30px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 50px;
+            white-space: nowrap;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.6);
+        }
+
+        #mini-player.expanded {
+            max-width: 400px;
+            padding-right: 25px;
+        }
+
+        .player-icon {
+            font-size: 1.2rem;
+            filter: drop-shadow(0 0 5px #7c3aed);
+            animation: pulseBeat 2s infinite;
+        }
+
+        @keyframes pulseBeat {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .track-info {
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.9);
+            letter-spacing: 1px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="stars-container">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+    </div>
+
+    <!-- Pantalla de Introducción -->
+    <div id="intro-screen">
+        <h1 class="intro-name grad-wave-text">Peki</h1>
+        <button class="enter-btn" onclick="startApp()">Entrar</button>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div id="main-content">
+        <div class="card-wrapper">
+            <div class="glass-card">
+                <h1 class="name-3d grad-wave-text">Peki</h1>
+
+                <div class="profile-img-container">
+                    <img src="https://xatimg.com/image/2sObjZjLvICu.jpg" alt="[Imagen de Peki]" class="profile-img">
+                </div>
+
+                <div class="info-card-mini">
+                    <div class="info-content">
+                        <span class="text-[0.6rem] uppercase tracking-[0.3em] text-violet-300 opacity-60">Presentación</span>
+                        
+                        <!-- Nacionalidad -->
+                        <div class="data-row">
+                            <span class="text-sm font-light tracking-widest uppercase">Nacionalidad:</span>
+                            <img src="https://images.emojiterra.com/twitter/v14.0/1024px/1f1f2-1f1fd.png" alt="[Bandera]" class="asset-icon">
+                        </div>
+
+                        <!-- Sección Love -->
+                        <div class="data-row">
+                            <span class="text-sm font-light tracking-widest uppercase">Love:</span>
+                            <img src="https://cdn-icons-png.flaticon.com/512/6569/6569629.png" alt="[Icono Love]" class="asset-icon">
+                        </div>
+
+                        <!-- Sección Signo Acuario -->
+                        <div class="data-row">
+                            <span class="text-sm font-light tracking-widest uppercase">SIGNO:</span>
+                            <span class="text-xl">♒</span>
+                            <span class="text-xs font-semibold tracking-[0.2em] text-violet-200">ACUARIO</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini Reproductor -->
+    <div id="mini-player" onclick="togglePlayer()">
+        <span class="player-icon">🎵</span>
+        <div class="track-info">
+            <strong>The Clash</strong> - Should I Stay or Should I Go
+        </div>
+    </div>
+
+    <!-- Audio Configurado -->
+    <audio id="bg-music" src="musica.mp3" loop preload="auto"></audio>
+
+    <script>
+        const audio = document.getElementById('bg-music');
+        const intro = document.getElementById('intro-screen');
+        const main = document.getElementById('main-content');
+        const player = document.getElementById('mini-player');
+
+        function startApp() {
+            // Ocultar pantalla de intro
+            intro.style.opacity = '0';
+            intro.style.pointerEvents = 'none';
+            
+            // Mostrar contenido principal
+            main.classList.add('content-visible');
+            
+            // Reproducción automática al hacer click en "Entrar"
+            audio.play().catch(error => {
+                console.log("La reproducción automática fue bloqueada o el archivo no se encontró:", error);
+            });
+            
+            // Efecto visual inicial del reproductor
+            setTimeout(() => {
+                player.classList.add('expanded');
+                setTimeout(() => player.classList.remove('expanded'), 4000);
+            }, 1000);
+        }
+
+        function togglePlayer() {
+            player.classList.toggle('expanded');
+        }
+    </script>
+</body>
+</html>
